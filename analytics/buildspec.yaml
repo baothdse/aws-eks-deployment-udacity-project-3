@@ -12,7 +12,7 @@ phases:
       - echo Starting build at `date`
       - echo Building the Docker image...
       - echo "$PWD"
-      - docker build -t coworking-analytics . --build-arg DB_USERNAME=$DB_USERNAME --build-arg DB_PASSWORD=$DB_PASSWORD
+      - docker build -t coworking-analytics ./analytics --build-arg DB_USERNAME=$DB_USERNAME --build-arg DB_PASSWORD=$DB_PASSWORD
       - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
   post_build:
     commands:
