@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: coworking
+  name: coworking-service
 spec:
   # A local environment doesn't generally have a LoadBalancer, so we use NodePort instead.
   type: NodePort
   selector:
-    service: coworking
+    service: coworking-service
   ports:
   - name: "5153"
     protocol: TCP
@@ -16,23 +16,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coworking
+  name: coworking-deployment
   labels:
-    name: coworking
+    name: coworking-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: coworking
+      service: coworking-service
   template:
     metadata:
       labels:
-        service: coworking
+        service: coworking-service
     spec:
       containers:
       - name: coworking
         # Locally hosted docker image
-        image: <DOCKER_IMAGE_NAME>:<IMAGE_TAG>
+        image: coworking-service:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -48,11 +48,11 @@ spec:
           timeoutSeconds: 5
         envFrom:
         - configMapRef:
-            name: <NAME OF THE ConfigMap>
+            name: coworking-config-local
         env:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: <NAME OF THE Secret>
-              key: <THE KEY FROM Secret WHICH has THE ENCODED PASSWORD>
+              name: coworking-secret-local
+              key: dbPassword
       restartPolicy: Always

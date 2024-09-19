@@ -16,11 +16,20 @@ spec:
         image: postgres:latest
         env:
         - name: POSTGRES_DB
-          value: mydatabase
+          valueFrom:
+            configMapKeyRef:
+              name: coworking-config-local
+              key: DB_NAME
         - name: POSTGRES_USER
-          value: myuser
+          valueFrom:
+            configMapKeyRef:
+              name: coworking-config-local
+              key: DB_USERNAME
         - name: POSTGRES_PASSWORD
-          value: mypassword
+          valueFrom:
+            secretKeyRef:
+              name: coworking-secret-local
+              key: dbPassword
         ports:
         - containerPort: 5432
         volumeMounts:
